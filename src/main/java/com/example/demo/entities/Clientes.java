@@ -43,4 +43,14 @@ public class Clientes {
     protected void onCreate() {
         fechaCreacion = LocalDateTime.now();
     }
+
+    //estos son unicamente para pruebas y pueden ser eliminados cuando no se necesiten
+
+    public void setNombre(String juanPerez) {
+    }
+
+    public void setEmail(String mail) {
+    }
+
+
 }

@@ -13,7 +13,8 @@ import java.time.LocalDateTime;
 public class ClientesServiceImp implements ClientesService {
     @Autowired
     private ClientesRepository repository;
-
+    @Autowired
+    private ClientesValidator clientesValidator;
     @Override
     public Clientes getClienteById(Long id) {
         return repository.findById(id)
@@ -23,7 +24,7 @@ public class ClientesServiceImp implements ClientesService {
     @Override
     public Clientes createCliente(Clientes cliente) {
         // Validar el cliente
-        ClientesValidator.validateCliente(cliente);
+        clientesValidator.validateCliente(cliente);
 
         // Si las validaciones son correctas, crear el cliente
         return repository.save(cliente);

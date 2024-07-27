@@ -4,9 +4,10 @@ import com.example.demo.entities.Clientes;
 import com.example.demo.exceptions.InvalidAgeException;
 import com.example.demo.exceptions.InvalidEmailException;
 import com.example.demo.exceptions.InvalidNameException;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Pattern;
-
+@Component
 public class ClientesValidator {
     public static void validateCliente(Clientes cliente) {
         validateAge(cliente.getEdad());
@@ -33,4 +34,7 @@ public class ClientesValidator {
             throw new InvalidNameException("El nombre y el apellido deben tener al menos 2 caracteres.");
         }
     }
+
+
+
 }

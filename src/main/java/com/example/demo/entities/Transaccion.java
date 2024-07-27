@@ -16,9 +16,6 @@ public class Transaccion {
     private String tipo;
     private BigDecimal monto;
 
-    @ManyToOne
-    @JoinColumn(name = "cuenta_id")
-    private Productos cuenta;
 
     @ManyToOne
     @JoinColumn(name = "cuenta_origen_id")
@@ -29,5 +26,6 @@ public class Transaccion {
     private Productos cuentaDestino;
 
     private LocalDateTime fechaHoraTransaccion;
+
 
 }

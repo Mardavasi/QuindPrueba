@@ -15,6 +15,9 @@ public class TransaccionController {
     @Autowired
     private TransaccionService transaccionService;
 
+    public TransaccionController(TransaccionService transaccionService) {
+    }
+
     @PostMapping("/realizar")
     public Transaccion realizarTransaccion(@RequestBody TransaccionDTO transaccionDTO) {
         return transaccionService.realizarTransaccion(

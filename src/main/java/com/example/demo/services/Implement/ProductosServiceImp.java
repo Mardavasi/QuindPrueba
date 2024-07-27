@@ -82,6 +82,7 @@ public class ProductosServiceImp implements ProductosService {
     @Override
     public Productos activarProducto(Long id) {
         Productos cuenta = obtenerProducto(id);
+
         cuenta.setEstado("activa");
         return repository.save(cuenta);
     }
