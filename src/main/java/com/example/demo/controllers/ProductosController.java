@@ -48,6 +48,7 @@ public class ProductosController {
     public Productos desactivarProducto(@PathVariable Long id) {
         return service.desactivarProducto(id);
     }
+
     @GetMapping("/{id}/estado")
     public String getEstadoProductoById(@PathVariable Long id) {
         return service.getEstadoProductoById(id);

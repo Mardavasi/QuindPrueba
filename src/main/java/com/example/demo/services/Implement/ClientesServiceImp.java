@@ -1,6 +1,6 @@
 package com.example.demo.services.Implement;
 
-import com.example.demo.Utils.ValidationUtils;
+import com.example.demo.validators.ClientesValidator;
 import com.example.demo.entities.Clientes;
 import com.example.demo.repository.ClientesRepository;
 import com.example.demo.services.ClientesService;
@@ -23,7 +23,7 @@ public class ClientesServiceImp implements ClientesService {
     @Override
     public Clientes createCliente(Clientes cliente) {
         // Validar el cliente
-        ValidationUtils.validateCliente(cliente);
+        ClientesValidator.validateCliente(cliente);
 
         // Si las validaciones son correctas, crear el cliente
         return repository.save(cliente);
@@ -38,7 +38,7 @@ public class ClientesServiceImp implements ClientesService {
                 .orElseThrow();
 
         // Validar los detalles del cliente antes de actualizar
-        ValidationUtils.validateCliente(clienteDetails);
+        ClientesValidator.validateCliente(clienteDetails);
 
         // Actualizar los campos necesarios
         clienteExistente.setNombres(clienteDetails.getNombres());

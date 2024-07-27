@@ -1,4 +1,4 @@
-package com.example.demo.Utils;
+package com.example.demo.validators;
 
 import com.example.demo.entities.Clientes;
 import com.example.demo.exceptions.InvalidAgeException;
@@ -7,7 +7,7 @@ import com.example.demo.exceptions.InvalidNameException;
 
 import java.util.regex.Pattern;
 
-public class ValidationUtils {
+public class ClientesValidator {
     public static void validateCliente(Clientes cliente) {
         validateAge(cliente.getEdad());
         validateEmail(cliente.getCorreoElectronico());
