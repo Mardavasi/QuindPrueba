@@ -13,6 +13,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -110,4 +111,91 @@ public class ClientesServiceImpTest {
         assertNotNull(result);
         assertEquals(clienteId, result.getId());
     }
+    @Test
+    void testActualizarClienteExitoso() {
+        // Arrange
+        Long clienteId = 1L;
+        Clientes clienteExistente = new Clientes();
+        clienteExistente.setId(clienteId);
+        clienteExistente.setNombres("Juan");
+        clienteExistente.setApellidos("Pérez");
+        clienteExistente.setCorreoElectronico("juan.perez@example.com");
+        clienteExistente.setFechaNacimiento(LocalDate.of(1990, 1, 1));
+        clienteExistente.setEdad(32);
+        clienteExistente.setFechaCreacion(LocalDateTime.now());
+
+        Clientes clienteDetails = new Clientes();
+        clienteDetails.setNombres("Carlos");
+        clienteDetails.setApellidos("Lopez");
+        clienteDetails.setCorreoElectronico("carlos.lopez@example.com");
+        clienteDetails.setFechaNacimiento(LocalDate.of(1992, 5, 20));
+
+        when(clientesRepository.findById(clienteId)).thenReturn(Optional.of(clienteExistente));
+        when(clientesRepository.save(any(Clientes.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Clientes updatedCliente = clientesServiceImp.updateCliente(clienteId, clienteDetails);
+
+        // Assert
+        assertNotNull(updatedCliente);
+        assertEquals("Carlos", updatedCliente.getNombres());
+        assertEquals("Lopez", updatedCliente.getApellidos());
+        assertEquals("carlos.lopez@example.com", updatedCliente.getCorreoElectronico());
+        assertEquals(LocalDate.of(1992, 5, 20), updatedCliente.getFechaNacimiento());
+        assertEquals(ClientesValidator.calcularEdad(LocalDate.of(1992, 5, 20)), updatedCliente.getEdad());
+        assertNotNull(updatedCliente.getFechaModificacion());
+
+        verify(clientesRepository).findById(clienteId);
+        verify(clientesRepository).save(clienteExistente);
+    }
+
+    @Test
+    void testActualizarClienteNoCambiaEdadSiNoCambiaFechaNacimiento() {
+        // Arrange
+        Long clienteId = 1L;
+        Clientes clienteExistente = new Clientes();
+        clienteExistente.setId(clienteId);
+        clienteExistente.setNombres("Juan");
+        clienteExistente.setApellidos("Pérez");
+        clienteExistente.setCorreoElectronico("juan.perez@example.com");
+        clienteExistente.setFechaNacimiento(LocalDate.of(1990, 1, 1));
+        clienteExistente.setEdad(32);
+        clienteExistente.setFechaCreacion(LocalDateTime.now());
+
+        Clientes clienteDetails = new Clientes();
+        clienteDetails.setNombres("Carlos");
+        clienteDetails.setApellidos("Lopez");
+        clienteDetails.setCorreoElectronico("carlos.lopez@example.com");
+        clienteDetails.setFechaNacimiento(LocalDate.of(1990, 1, 1)); // Misma fecha de nacimiento
+
+        when(clientesRepository.findById(clienteId)).thenReturn(Optional.of(clienteExistente));
+        when(clientesRepository.save(any(Clientes.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        // Act
+        Clientes updatedCliente = clientesServiceImp.updateCliente(clienteId, clienteDetails);
+
+        // Assert
+        assertNotNull(updatedCliente);
+        assertEquals(clienteExistente.getEdad(), updatedCliente.getEdad()); // La edad no cambia
+        assertNotNull(updatedCliente.getFechaModificacion());
+
+        verify(clientesRepository).findById(clienteId);
+        verify(clientesRepository).save(clienteExistente);
+    }
+
+    @Test
+    void testActualizarClienteNoEncontrado() {
+        // Arrange
+        Long clienteId = 1L;
+        Clientes clienteDetails = new Clientes();
+
+        when(clientesRepository.findById(clienteId)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(IllegalArgumentException.class, () -> clientesServiceImp.updateCliente(clienteId, clienteDetails));
+
+        verify(clientesRepository).findById(clienteId);
+        verify(clientesRepository, never()).save(any(Clientes.class));
+    }
+
 }
