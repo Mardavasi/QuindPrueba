@@ -12,18 +12,12 @@ import java.util.regex.Pattern;
 @Component
 public class ClientesValidator {
     public static void validateCliente(Clientes cliente) {
-        // Validación de la edad basada en la fecha de nacimiento
         if (cliente.getFechaNacimiento() == null) {
             throw new IllegalArgumentException("La fecha de nacimiento no puede ser nula.");
         }
-
         int edad = calcularEdad(cliente.getFechaNacimiento());
         validateAge(edad);
-
-        // Validación del correo electrónico
         validateEmail(cliente.getCorreoElectronico());
-
-        // Validación del nombre y apellidos
         validateName(cliente.getNombres(), cliente.getApellidos());
     }
 
@@ -32,7 +26,7 @@ public class ClientesValidator {
             throw new InvalidAgeException("El cliente debe ser mayor de edad.");
         }
     }
-    // Método para calcular la edad a partir de la fecha de nacimiento
+
     public static int calcularEdad(LocalDate fechaNacimiento) {
         return Period.between(fechaNacimiento, LocalDate.now()).getYears();
     }

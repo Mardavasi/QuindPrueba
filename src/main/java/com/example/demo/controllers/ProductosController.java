@@ -17,12 +17,9 @@ public class ProductosController {
 
     @PostMapping("/crear/{clienteId}")
     public Productos createProducto(@PathVariable Long clienteId, @RequestBody Productos producto) {
-        // Buscar el cliente por su ID
         Clientes cliente = clientesRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con ID: " + clienteId));
-        // Asignar el cliente al producto
         producto.setCliente(cliente);
-        // Llamar al servicio para crear el producto
         return service.createProducto(clienteId, producto);
     }
 

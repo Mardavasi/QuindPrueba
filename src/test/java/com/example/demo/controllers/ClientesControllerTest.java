@@ -28,7 +28,6 @@ public class ClientesControllerTest {
     @Test
     void testCreateCliente() throws Exception {
         Clientes cliente = new Clientes();
-        // Configura el cliente según sea necesario
         when(service.createCliente(any(Clientes.class))).thenReturn(cliente);
 
         mockMvc.perform(post("/api/clientes")
@@ -69,15 +68,12 @@ public class ClientesControllerTest {
     void testGetClienteById() throws Exception {
         Long clienteId = 1L;
         Clientes cliente = new Clientes();
-        // Configura el cliente según sea necesario
-
         when(service.getClienteById(clienteId)).thenReturn(cliente);
 
         mockMvc.perform(get("/api/clientes/{id}", clienteId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(cliente.getId()))
-        // Añade más expectativas según los campos del objeto Clientes
         ;
 
         verify(service, times(1)).getClienteById(clienteId);

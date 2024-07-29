@@ -23,16 +23,9 @@ public class ClientesServiceImp implements ClientesService {
 
     @Override
     public Clientes createCliente(Clientes cliente) {
-        // Calcular la edad del cliente
         int edad = ClientesValidator.calcularEdad(cliente.getFechaNacimiento());
-
-        // Establecer la edad en el cliente
         cliente.setEdad(edad);
-
-        // Validar el cliente (incluye la validación de la edad)
         ClientesValidator.validateCliente(cliente);
-
-        // Si las validaciones son correctas, crear el cliente
         return repository.save(cliente);
     }
 
@@ -41,25 +34,18 @@ public class ClientesServiceImp implements ClientesService {
 
     @Override
     public Clientes updateCliente(Long id, Clientes clienteDetails) {
-        // Obtener el cliente existente por su ID
         Clientes clienteExistente = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + id));
-
-        // Calcular la edad del cliente basándose en la fecha de nacimiento proporcionada
         int edad = ClientesValidator.calcularEdad(clienteDetails.getFechaNacimiento());
-
-        // Actualizar los campos necesarios en el cliente existente
         clienteExistente.setNombres(clienteDetails.getNombres());
         clienteExistente.setApellidos(clienteDetails.getApellidos());
         clienteExistente.setCorreoElectronico(clienteDetails.getCorreoElectronico());
         clienteExistente.setFechaNacimiento(clienteDetails.getFechaNacimiento());
-        clienteExistente.setEdad(edad); // Actualizar la edad calculada
+        clienteExistente.setEdad(edad);
         clienteExistente.setFechaModificacion(LocalDateTime.now());
 
-        // Validar los detalles del cliente antes de guardar los cambios
         ClientesValidator.validateCliente(clienteExistente);
 
-        // Guardar y devolver el cliente actualizado
         return repository.save(clienteExistente);
     }
 
@@ -69,8 +55,6 @@ public class ClientesServiceImp implements ClientesService {
     public void deleteCliente(Long id) {
         Clientes cliente = repository.findById(id)
                 .orElseThrow();
-
-        // Verificar si el cliente tiene productos vinculados
         if (!cliente.getProductos().isEmpty()) {
             throw new IllegalArgumentException("No se puede eliminar el cliente porque tiene productos vinculados.");
         }

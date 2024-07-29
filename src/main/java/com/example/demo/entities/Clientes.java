@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "clientes")
 public class Clientes {
     @OneToMany(mappedBy = "cliente", fetch = FetchType.LAZY)
-    @JsonManagedReference // Anotación para el lado que será serializado
+    @JsonManagedReference
     private List<Productos> productos;
 
     @Id

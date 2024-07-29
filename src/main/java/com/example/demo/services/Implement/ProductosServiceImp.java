@@ -27,9 +27,7 @@ public class ProductosServiceImp implements ProductosService {
     @Autowired
     private NumeroCuentaGenerator numeroCuentaGenerator;
 
-    /**
-     * Crea un nuevo producto asociándolo con un cliente y realiza validaciones.
-     */
+
     @Override
     public Productos createProducto(Long clienteId, Productos producto) {
         Clientes cliente = obtenerCliente(clienteId);
@@ -44,9 +42,6 @@ public class ProductosServiceImp implements ProductosService {
         return repository.save(producto);
     }
 
-    /**
-     * Actualiza un producto existente con los nuevos datos proporcionados.
-     */
     @Override
     public Productos updateProducto(Long id, Productos producto) {
         Productos productoExistente = obtenerProducto(id);
@@ -58,9 +53,7 @@ public class ProductosServiceImp implements ProductosService {
         return repository.save(productoExistente);
     }
 
-    /**
-     * Elimina un producto si su saldo es cero.
-     */
+
     @Override
     public void deleteProducto(Long id) {
         Productos producto = obtenerProducto(id);
@@ -68,17 +61,13 @@ public class ProductosServiceImp implements ProductosService {
         repository.delete(producto);
     }
 
-    /**
-     * Obtiene un producto por su ID.
-     */
+
     @Override
     public Productos getProductoById(Long id) {
         return obtenerProducto(id);
     }
 
-    /**
-     * Activa un producto cambiando su estado a "activa".
-     */
+
     @Override
     public Productos activarProducto(Long id) {
         Productos cuenta = obtenerProducto(id);
@@ -87,9 +76,7 @@ public class ProductosServiceImp implements ProductosService {
         return repository.save(cuenta);
     }
 
-    /**
-     * Desactiva un producto cambiando su estado a "inactiva".
-     */
+
     @Override
     public Productos desactivarProducto(Long id) {
         Productos cuenta = obtenerProducto(id);
@@ -97,44 +84,33 @@ public class ProductosServiceImp implements ProductosService {
         return repository.save(cuenta);
     }
 
-    /**
-     * Obtiene el estado de un producto por su ID.
-     */
+
     @Override
     public String getEstadoProductoById(Long id) {
         Productos producto = obtenerProducto(id);
         return producto.getEstado();
     }
 
-    /**
-     * Obtiene un cliente por su ID o lanza una excepción si no se encuentra, para evitar la repetición de código al
-     * crear, actualizar o eliminar productos.
-     */
+
     private Clientes obtenerCliente(Long clienteId) {
         return clientesRepository.findById(clienteId)
                 .orElseThrow(() -> new IllegalArgumentException("Cliente no encontrado con id: " + clienteId));
     }
 
-    /**
-     * Obtiene un producto por su ID para pasarlo a metodos como getproductoById que es usado en el controlador.
-     */
+
     private Productos obtenerProducto(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Producto no encontrado con id: " + id));
     }
 
-    /**
-     * Verifica que el saldo de un producto sea cero antes de eliminarlo.
-     */
+
     private void verificarSaldoCero(Productos producto) {
         if (producto.getSaldo().compareTo(BigDecimal.ZERO) != 0) {
             throw new IllegalArgumentException("No se puede cancelar la cuenta porque tiene un saldo diferente de $0.");
         }
     }
 
-    /**
-     * Actualiza los datos de un producto existente con los datos nuevos.
-     */
+
     private void actualizarDatosProducto(Productos productoExistente, Productos productoNuevo) {
         productoExistente.setTipoCuenta(productoNuevo.getTipoCuenta());
         productoExistente.setEstado(productoNuevo.getEstado());
@@ -143,9 +119,7 @@ public class ProductosServiceImp implements ProductosService {
         productoExistente.setFechaModificacion(LocalDateTime.now());
     }
 
-    /**
-     * Establece el estado predeterminado del producto basado en el tipo de cuenta.
-     */
+
     private void establecerEstadoPredeterminado(Productos producto) {
         if (producto.getTipoCuenta().equals("cuenta de ahorros") || producto.getTipoCuenta().equals("cuenta corriente")) {
             producto.setEstado("activa");

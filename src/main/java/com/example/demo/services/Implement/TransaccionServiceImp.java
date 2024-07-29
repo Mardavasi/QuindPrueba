@@ -25,13 +25,10 @@ public class TransaccionServiceImp implements TransaccionService {
                 .orElseThrow(() -> new IllegalArgumentException("Cuenta de origen no encontrada con id: " + cuentaOrigenId));
         Productos cuentaDestino = productosRepository.findById(cuentaDestinoId)
                 .orElseThrow(() -> new IllegalArgumentException("Cuenta destino no encontrada con id: " + cuentaDestinoId));
-
-        // Verificar que la cuenta de origen tenga suficiente saldo
         if (cuentaOrigen.getSaldo().compareTo(monto) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente en la cuenta de origen.");
         }
 
-        // Actualizar los saldos
         cuentaOrigen.setSaldo(cuentaOrigen.getSaldo().subtract(monto));
         cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(monto));
 
@@ -43,7 +40,6 @@ public class TransaccionServiceImp implements TransaccionService {
         transaccion.setFechaHoraTransaccion(LocalDateTime.now());
 
 
-        // Guardar las cuentas actualizadas y la transacción
         productosRepository.save(cuentaOrigen);
         productosRepository.save(cuentaDestino);
         return transaccionRepository.save(transaccion);
@@ -57,7 +53,6 @@ public class TransaccionServiceImp implements TransaccionService {
         if (cuentaOrigen.getSaldo().compareTo(monto) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente para realizar el retiro.");
         }
-
         cuentaOrigen.setSaldo(cuentaOrigen.getSaldo().subtract(monto));
 
         Transaccion transaccion = new Transaccion();
@@ -78,7 +73,6 @@ public class TransaccionServiceImp implements TransaccionService {
         }
         Productos cuentaDestino = productosRepository.findById(cuentaDestinoId)
                 .orElseThrow(() -> new IllegalArgumentException("Cuenta destino no encontrada con id: " + cuentaDestinoId));
-
         cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(monto));
 
         Transaccion transaccion = new Transaccion();

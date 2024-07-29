@@ -35,10 +35,7 @@ public class ClientesServiceImpTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    /**
-     * Prueba para verificar la creación de un cliente.
-     * Se asegura que el cliente se cree correctamente y que se apliquen las validaciones necesarias.
-     */
+
     @Test
     void testCreateCliente() {
         // Arrange
@@ -59,10 +56,7 @@ public class ClientesServiceImpTest {
     }
 
 
-    /**
-     * Prueba para verificar la eliminación de un cliente.
-     * Se asegura que el cliente se elimine correctamente si no tiene productos vinculados.
-     */
+
     @Test
     void testDeleteCliente() {
         Long clienteId = 1L;
@@ -78,10 +72,7 @@ public class ClientesServiceImpTest {
         verify(clientesRepository).delete(cliente);
     }
 
-    /**
-     * Prueba para verificar que no se puede eliminar un cliente con productos vinculados.
-     * Se asegura que se lance una excepción con el mensaje adecuado si se intenta eliminar un cliente con productos vinculados.
-     */
+
     @Test
     void testDeleteClienteConProductos() {
         Long clienteId = 1L;
@@ -94,10 +85,7 @@ public class ClientesServiceImpTest {
         assertEquals("No se puede eliminar el cliente porque tiene productos vinculados.", thrown.getMessage());
     }
 
-    /**
-     * Prueba para verificar la obtención de un cliente por su ID.
-     * Se asegura que se retorne el cliente correcto con el ID dado.
-     */
+
     @Test
     void testGetClienteById() {
         Long clienteId = 1L;
@@ -113,7 +101,7 @@ public class ClientesServiceImpTest {
     }
     @Test
     void testActualizarClienteExitoso() {
-        // Arrange
+
         Long clienteId = 1L;
         Clientes clienteExistente = new Clientes();
         clienteExistente.setId(clienteId);
@@ -133,10 +121,10 @@ public class ClientesServiceImpTest {
         when(clientesRepository.findById(clienteId)).thenReturn(Optional.of(clienteExistente));
         when(clientesRepository.save(any(Clientes.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
+
         Clientes updatedCliente = clientesServiceImp.updateCliente(clienteId, clienteDetails);
 
-        // Assert
+
         assertNotNull(updatedCliente);
         assertEquals("Carlos", updatedCliente.getNombres());
         assertEquals("Lopez", updatedCliente.getApellidos());
@@ -151,7 +139,7 @@ public class ClientesServiceImpTest {
 
     @Test
     void testActualizarClienteNoCambiaEdadSiNoCambiaFechaNacimiento() {
-        // Arrange
+
         Long clienteId = 1L;
         Clientes clienteExistente = new Clientes();
         clienteExistente.setId(clienteId);
@@ -171,10 +159,10 @@ public class ClientesServiceImpTest {
         when(clientesRepository.findById(clienteId)).thenReturn(Optional.of(clienteExistente));
         when(clientesRepository.save(any(Clientes.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
+
         Clientes updatedCliente = clientesServiceImp.updateCliente(clienteId, clienteDetails);
 
-        // Assert
+
         assertNotNull(updatedCliente);
         assertEquals(clienteExistente.getEdad(), updatedCliente.getEdad()); // La edad no cambia
         assertNotNull(updatedCliente.getFechaModificacion());
@@ -185,13 +173,13 @@ public class ClientesServiceImpTest {
 
     @Test
     void testActualizarClienteNoEncontrado() {
-        // Arrange
+
         Long clienteId = 1L;
         Clientes clienteDetails = new Clientes();
 
         when(clientesRepository.findById(clienteId)).thenReturn(Optional.empty());
 
-        // Act & Assert
+
         assertThrows(IllegalArgumentException.class, () -> clientesServiceImp.updateCliente(clienteId, clienteDetails));
 
         verify(clientesRepository).findById(clienteId);
